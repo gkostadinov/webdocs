@@ -2,7 +2,7 @@ var DOC_ID = '1';
 var changes = [];
 
 function Socket(onMessage) {
-    this.ws = new WebSocket('ws://localhost:8000');
+    this.ws = new WebSocket(WEBSOCKET_IP);
     this.ws.onmessage = onMessage;
 
     this.send(JSON.stringify({'document_id': DOC_ID}))

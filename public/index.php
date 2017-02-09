@@ -1,7 +1,6 @@
 <?php
     session_start();
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -13,11 +12,9 @@
 
         <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
-        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/vendor/normalize.css">
+        <link rel="stylesheet" href="css/vendor/quill.core.css">
         <link rel="stylesheet" href="css/base.css">
-
-        <link rel="stylesheet" href="css/vendor/trix.css">
-
         <link rel="stylesheet" href="css/app.css">
     </head>
     <body>
@@ -44,13 +41,15 @@
                         </div>
                     </div>
                     <div class="row box-content small-padding round-bottom">
-                        <trix-editor class="trix-content" placeholder="Start writing something..."></trix-editor>
+                        <div id="editor"></div>
                     </div>
                 </section>
             </div>
         </section>
 
-        <script async src="js/vendor/trix.js"></script>
-        <script async src="js/base.js"></script>
+        <script src="js/vendor/quill.core.js"></script>
+        <script src="js/base.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/app.js"></script>
     </body>
 </html>
