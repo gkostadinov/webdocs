@@ -111,3 +111,12 @@ section.content .container .box .row.box-content {
 section.content .container .box .row.box-content.round-bottom {
     border-radius: 0 0 .4rem .4rem;
 }
+
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
+    border: none;
+}
+
+.ql-toolbar.ql-snow {
+    border-bottom: 1px solid rgba(84,121,128,.3);
+}

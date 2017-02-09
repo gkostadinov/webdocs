@@ -13,7 +13,7 @@
         <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
 
         <link rel="stylesheet" href="css/vendor/normalize.css">
-        <link rel="stylesheet" href="css/vendor/quill.core.css">
+        <link rel="stylesheet" href="css/vendor/quill.css">
         <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/app.css">
     </head>
@@ -41,13 +41,14 @@
                         </div>
                     </div>
                     <div class="row box-content small-padding round-bottom">
+                        <div id="toolbar"></div>
                         <div id="editor"></div>
                     </div>
                 </section>
             </div>
         </section>
 
-        <script src="js/vendor/quill.core.js"></script>
+        <script src="js/vendor/quill.js"></script>
         <script src="js/base.js"></script>
         <script src="js/config.js"></script>
         <script src="js/app.js"></script>

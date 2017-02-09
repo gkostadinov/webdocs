@@ -32,30 +32,50 @@ Socket.prototype.waitForConnection = function(callback, interval) {
 window.on('load', function() {
     ws = new Socket(function(msg){
         var data = JSON.parse(msg.data);
-        console.log(data);
-        if (data.delta) {
-            var retain = 0;
-            console.log(JSON.stringify(data.delta));
-            data.delta.forEach(function(op) {
-                console.log(op);
 
-                quill.updateContents({ops: [op]});
+        if (data.delta) {
+            data.delta.forEach(function(ops) {
+                console.log(ops);
+                quill.updateContents({'ops': ops});
             });
         }
     });
 
-    var quill = new Quill('#editor');
-    quill.focus();
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
 
-    _.q = quill; // for debug
+        [{ 'header': 1 }, { 'header': 2 }],
+        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+        [{ 'script': 'sub'}, { 'script': 'super' }],
+        [{ 'indent': '-1'}, { 'indent': '+1' }],
+        [{ 'direction': 'rtl' }],
+
+        [{ 'size': ['small', false, 'large', 'huge'] }],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'font': [] }],
+        [{ 'align': [] }],
+
+        ['clean']
+    ];
+
+    var quill = new Quill('#editor',  {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow'
+    });
+    quill.focus();
 
     quill.on('text-change', function(delta, oldDelta, source) {
         if (source == 'user') {
-            delta.ops.forEach(function(op) {
-                changes.push(op);
-            });
+            changes.push(delta.ops);
         }
     });
+
+    _.q = quill; // for debug
 
     sendChanges(ws);
 });
@@ -65,5 +85,5 @@ function sendChanges(ws) {
         ws.send(JSON.stringify({'delta': changes, 'document_id': DOC_ID}));
         changes = [];
     }
-    setTimeout(function() { sendChanges(ws); }, 1000);
+    setTimeout(function() { sendChanges(ws); }, 500);
 }
