@@ -65,6 +65,7 @@ window.on('load', function() {
         modules: {
             toolbar: toolbarOptions
         },
+        placeholder: 'Start writing something...',
         theme: 'snow'
     });
     quill.focus();
