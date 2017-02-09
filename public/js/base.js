@@ -1,6 +1,6 @@
 NodeList.prototype.forEach = []['forEach']
 
-Node.prototype.on = function(eventName, func) {
+Node.prototype.on = window.on = function(eventName, func) {
     this.addEventListener(eventName, func, false);
 
     return this;
@@ -29,8 +29,20 @@ NodeList.prototype.trigger = function(eventName, data) {
     return this;
 }
 
+Element.prototype.remove = function() {
+    this.parentElement.removeChild(this);
+}
+
+NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
+    for(var i = this.length - 1; i >= 0; i--) {
+        if(this[i] && this[i].parentElement) {
+            this[i].parentElement.removeChild(this[i]);
+        }
+    }
+}
+
 function _(selector) {
-    var el = document.querySelectorAll(selector);
+    var el = document.querySelectorAll(selector || '_');
 
     return el.length == 1 ? el[0] : el;
 }
@@ -39,8 +51,13 @@ _._ = document.createElement('_');
 _.on = Node.prototype.on.bind(_._);
 _.trigger = Node.prototype.trigger.bind(_._);
 
-_.ajax = function(type, url, callback, options={}) {
+_.ajax = function(type, url, options, callback) {
     var xhr = new XMLHttpRequest();
+
+    if (typeof options === 'function') {
+        callback = options
+        options = null
+    }
 
     xhr.onload = function () {
         callback.call(xhr, null, JSON.parse(xhr.response));
@@ -50,11 +67,10 @@ _.ajax = function(type, url, callback, options={}) {
         callback.call(xhr, true);
     };
 
+    xhr.open(type, url);
     if (type === 'POST') {
         xhr.setRequestHeader('Content-Type', 'application/json');
     }
-
-    xhr.open(type, url);
     xhr.send(options ? JSON.stringify(options) : null);
 }
 _.get = _.ajax.bind(this, 'GET')

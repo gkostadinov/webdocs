@@ -104,33 +104,10 @@ section.content .container .box .row.box-title .box-title-button {
 
 section.content .container .box .row.box-content {
     margin-top: 0rem;
-    padding: 2rem;
     border: 1px solid rgba(84,121,128,.3);
     box-shadow: 0 .1rem rgba(84,121,128,.3);
 }
 
 section.content .container .box .row.box-content.round-bottom {
     border-radius: 0 0 .4rem .4rem;
-}
-
-trix-toolbar .button_group {
-    border: none;
-}
-
-trix-toolbar .button_group button:hover {
-    background-color: rgba(84,121,128,.3);
-}
-
-trix-toolbar .dialog .button_group input[type=button] {
-    color: #fff;
-}
-
-trix-editor {
-    border: none;
-    border-top: 1px solid #547980;
-    border-radius: 0;
-}
-
-trix-editor {
-    font-family: Arial;
 }
