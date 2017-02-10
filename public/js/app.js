@@ -60,30 +60,42 @@ App.prototype.initEditor = function(selector, editorOptions) {
 }
 
 App.prototype.initModal = function(modalSelector) {
-    return new Modal(modalSelector, this.onModalOpen.bind(this));
-}
+    var that = this;
+    _('#share_confirm').on('click', function() {
+        if (that.documentShared)
+            return true;
 
-App.prototype.onModalOpen = function() {
-    if (!this.documentShared) {
-        var that = this;
+        var docTitle = _('#title_input').value.trim();
         _.post(API_HOST + '/webdocs/api/document',
             {
-                'title': this.docTitle,
-                'content': this.getEditorContents()
+                'title': docTitle,
+                'content': that.getEditorContents()
             },
             function(err, data) {
                 if (err)
                     return;
 
+                that.docTitle = docTitle;
                 that.docId = data.edit_id;
                 that.editId = data.edit_id;
                 that.viewId = data.view_id;
                 that.documentShared = true;
                 that.setLinks();
+                that.setTitle();
                 that.initSocket();
+                _('#share_confirm').style.display = 'none';
+                _('#next_step').style.display = 'block';
             }
         );
-    } else {
+    })
+
+    return new Modal(modalSelector, this.onModalOpen.bind(this));
+}
+
+App.prototype.onModalOpen = function() {
+    if (this.documentShared) {
+        _('#share_confirm').style.display = 'none';
+        _('#next_step').style.display = 'block';
         this.setLinks();
     }
 }
@@ -106,6 +118,11 @@ App.prototype.setLinks = function() {
 
 App.prototype.setTitle = function() {
     _('#title').innerText = this.docTitle;
+
+    _('#title_input').value = this.docTitle;
+    if (this.documentShared) {
+        _('#title_input').setAttribute('disabled', 'true');
+    }
 }
 
 App.prototype.editorTextChanged = function(delta, oldDelta, source) {

@@ -55,27 +55,39 @@
                         <h5>Share the document</h5>
                     </div>
                     <div class="box-title-button">
-                        <a href="javascript:void(0)"  class="button" id="close_btn" title="Close the modal">Close</a>
+                        <a href="javascript:void(0)" class="button" id="close_btn" title="Close the modal">Close</a>
                     </div>
                 </div>
                 <div class="row box-content small-padding round-bottom">
                     <div class="row">
                         <div class="row">
-                            <h5>Link for edit:</h5>
+                            <h5>Title:</h5>
                         </div>
                         <div class="row">
-                            <input id="edit_link" class="twelve columns" type="text" onClick="this.setSelectionRange(0, this.value.length)" value="">
+                            <input id="title_input" class="twelve columns" type="text" value="">
+                        </div>
+                        <div class="row" id="share_confirm" style="margin-top: 20px;">
+                            <a href="javascript:void(0)" class="button" title="Share">Share</a>
                         </div>
                     </div>
-                    <div class="row">
+                    <div id="next_step" style="display: none">
                         <div class="row">
-                            <h5>Link for view:</h5>
+                            <div class="row">
+                                <h5>Link for edit:</h5>
+                            </div>
+                            <div class="row">
+                                <input id="edit_link" class="twelve columns" type="text" onClick="this.setSelectionRange(0, this.value.length)" value="">
+                            </div>
                         </div>
                         <div class="row">
-                            <input id="view_link" class="twelve columns" type="text" onClick="this.setSelectionRange(0, this.value.length)" value="">
+                            <div class="row">
+                                <h5>Link for view:</h5>
+                            </div>
+                            <div class="row">
+                                <input id="view_link" class="twelve columns" type="text" onClick="this.setSelectionRange(0, this.value.length)" value="">
+                            </div>
                         </div>
                     </div>
-                    </ul>
                 </div>
             </section>
         </div>

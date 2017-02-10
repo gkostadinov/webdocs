@@ -159,6 +159,15 @@ section.content .container .box .row.box-content.round-bottom {
     margin-bottom: 0px;
 }
 
-.modal .box-content > .row:last-child {
+.modal .box-content #next_step > .row {
     margin-top: 20px;
+}
+
+.modal .box-content #next_step > .row:first-child {
+    margin-top: 10px;
+}
+
+
+.modal .box-content #title_input[disabled=true] {
+    border: none;
 }
