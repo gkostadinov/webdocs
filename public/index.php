@@ -49,8 +49,10 @@
         </section>
 
         <script src="js/vendor/quill.js"></script>
-        <script src="js/base.js"></script>
-        <script src="js/config.js"></script>
-        <script src="js/app.js"></script>
+        <script src="js/base.js?v=1"></script>
+
+        <script src="js/config.js?v=1"></script>
+        <script src="js/socket.js?v=1"></script>
+        <script src="js/app.js?v=1"></script>
     </body>
 </html>

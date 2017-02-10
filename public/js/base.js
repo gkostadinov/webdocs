@@ -75,3 +75,9 @@ _.ajax = function(type, url, options, callback) {
 }
 _.get = _.ajax.bind(this, 'GET')
 _.post = _.ajax.bind(this, 'POST')
+
+_.proxy = function(func, context) {
+    return function() {
+        return func.apply(context || this);
+    }
+}
