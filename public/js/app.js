@@ -135,8 +135,9 @@ App.prototype.editorTextChanged = function(delta, oldDelta, source) {
 
 App.prototype.wsReceiveMessage = function(data){
     if (data.delta) {
+        var delta = JSON.parse(data.delta);
         var that = this;
-        data.delta.forEach(function(ops) {
+        delta.forEach(function(ops) {
             that.editor.updateContents({'ops': ops});
         });
     }
@@ -146,7 +147,13 @@ App.prototype.initEditorChangeObserver = function() {
     var func = function() {
         if (this.editorChanges.length > 0) {
             if (this.ws !== null) {
-                this.ws.send({'delta': this.editorChanges, 'document_id': this.docId, 'content': this.getEditorContents()});
+                this.ws.send(
+                    {
+                        'delta': JSON.stringify(this.editorChanges),
+                        'document_id': this.docId,
+                        'content': this.getEditorContents()
+                    }
+                );
             }
             this.editorChanges = [];
         }
