@@ -57,13 +57,16 @@ class WebDocsServer extends WebSocketServer {
     }
 
     protected function closed ($user) {
-    $roomId = $this->webdocsusers[$user->id];
-    $found = array_search($user, $this->rooms[$roomId]);
-    unset($this->rooms[$roomId][$found]);
-    if(empty($this->rooms[$roomId])) {
-        unset($this->rooms[$roomId]);
-    }
-    unset($this->webdocsusers[$user->id]);
+        $roomId = $this->webdocsusers[$user->id];
+        if($roomId != "-1") {
+            $found = array_search($user, $this->rooms[$roomId]);
+            unset($this->rooms[$roomId][$found]);
+            if(empty($this->rooms[$roomId])) {
+                unset($this->rooms[$roomId]);
+            }
+        }
+
+        unset($this->webdocsusers[$user->id]);
     }
 }
 
