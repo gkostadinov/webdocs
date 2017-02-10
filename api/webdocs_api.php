@@ -1,6 +1,7 @@
 <?php
 
 require_once 'abstract_api.php';
+require_once '../config.php';
 
 class WebDocsAPI extends API
 {
@@ -11,8 +12,12 @@ class WebDocsAPI extends API
     protected $VIEW_ID_SALT = "6jMcPqfx";
     protected $EDIT_ID_SALT = "NkJovCdr";
     protected function document() {
+        global $DB_HOST;
+        global $DB_NAME;
+        global $DB_USER;
+        global $DB_PASSWORD;
         try {
-            $conn = new PDO('mysql:host=localhost;dbname=webdocs', "root", "");
+            $conn = new PDO('mysql:host=' . $DB_HOST . ';dbname=' . $DB_NAME, $DB_USER, $DB_PASSWORD);
             switch($this->verb) {
                 case "v":
                     if($this->method == "GET") {

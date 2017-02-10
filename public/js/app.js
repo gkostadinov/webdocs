@@ -66,7 +66,7 @@ App.prototype.initModal = function(modalSelector) {
             return true;
 
         var docTitle = _('#title_input').value.trim();
-        _.post(API_HOST + '/webdocs/api/document',
+        _.post(API_HOST + '/document',
             {
                 'title': docTitle,
                 'content': that.getEditorContents()
@@ -184,7 +184,7 @@ window.on('load', function() {
 
     if (urlHash.startsWith(editIdentifier)) {
         pageId = urlHash.replace(editIdentifier, '');
-        _.get(API_HOST + '/webdocs/api/document/e/' + pageId,
+        _.get(API_HOST + '/document/e/' + pageId,
             function(err, data) {
                 if (err) {
                     done();
@@ -203,7 +203,7 @@ window.on('load', function() {
         );
     } else if (urlHash.startsWith(viewIdentifier)) {
         pageId = urlHash.replace(viewIdentifier, '');
-        _.get(API_HOST + '/webdocs/api/document/v/' + pageId,
+        _.get(API_HOST + '/document/v/' + pageId,
             function(err, data) {
                 if (err) {
                     done();

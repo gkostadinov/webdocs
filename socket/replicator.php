@@ -2,6 +2,7 @@
 <?php
 
 require_once('./websockets.php');
+require_once('../config.php');
 
 class WebDocsServer extends WebSocketServer {
     protected $maxBufferSize = 1048576; //1MB
@@ -9,6 +10,8 @@ class WebDocsServer extends WebSocketServer {
     protected $rooms = array();
 
     protected function process ($user, $message) {
+        global $API_HOST;
+
         $decodedMsg = json_decode($message, true);
         if(!array_key_exists("document_id" , $decodedMsg)) {
             return;
@@ -39,7 +42,7 @@ class WebDocsServer extends WebSocketServer {
 
         if(array_key_exists("content", $decodedMsg)) {
             $content = json_encode(array("content" => $decodedMsg["content"]));
-            $curl = curl_init('http://localhost/webdocs/api/document/update/' . $docid);
+            $curl = curl_init($API_HOST . '/document/update/' . $docid);
             curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
             curl_setopt($curl, CURLOPT_POSTFIELDS, $content);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
