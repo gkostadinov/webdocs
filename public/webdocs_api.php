@@ -28,11 +28,35 @@ class WebDocsAPI extends API
 
                         return array("status" => "success", "title" => $result["title"], "content" => $result["text_content"]);
                     }
-
                     return array("status" => "fail", "reason" => "Only GET is allowed");
-                    break;
                 case "e":
-                    break;
+                    if($this->method == "GET") {
+                        $stmt = $conn->prepare("SELECT document_id, view FROM document_links WHERE edit=?");
+                        $stmt->execute(array($this->args[0]));
+
+                        $linksResults = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        $stmt = $conn->prepare("SELECT title, text_content FROM document_content WHERE id=?");
+                        $stmt->execute(array($linksResults["document_id"]));
+
+                        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                        return array("status" => "success", "view_id" => $linksResults["view"], "title" => $result["title"], "content" => $result["text_content"]);
+                    }
+                    return array("status" => "fail", "reason" => "Only GET is allowed");
+                case "update":
+                    if($this->method == "POST") {
+                        $fileContent = json_decode($this->file, true);
+                        $stmt = $conn->prepare("SELECT document_id FROM document_links WHERE edit=?");
+                        $stmt->execute(array($this->args[0]));
+
+                        $docid = $stmt->fetch(PDO::FETCH_ASSOC)["document_id"];
+
+                        $stmt = $conn->prepare("UPDATE document_content SET text_content=? WHERE id=?");
+                        $stmt->execute(array($fileContent["content"], $docid));
+                        return array("status" => "success");
+                    }
+                    return array("status" => "fail", "reason" => "Only POST is allowed");
                 case "":
                     if($this->method == "POST") {
                         if(empty($this->args)) {
@@ -63,49 +87,6 @@ class WebDocsAPI extends API
         }
         return array("status" => "fail", "reason" => "Not allowed operation");
     }
-
-    /*
-     * Example of an Endpoint
-     */
-     protected function example() {
-        switch ($this->verb) {
-            case "get":
-                if ($this->method == 'GET') {
-                    return array("status" => "success", "endpoint" => $this->endpoint, "verb" => $this->verb, "args" => $this->args, "request" => $this->request);
-                } 
-                else {
-                    return "Only accepts GET requests";
-                }
-                break;
-            case "post":
-                if ($this->method == 'POST') {
-                    return array("status" => "success", "endpoint" => $this->endpoint, "verb" => $this->verb, "args" => $this->args, "request" => $this->request);
-                } 
-                else {
-                    return "Only accepts POST requests";
-                }
-                break;
-            case "delete":
-                if ($this->method == 'PUT') {
-                    return array("status" => "success", "endpoint" => $this->endpoint, "verb" => $this->verb, "args" => $this->args, "request" => $this->request);
-                } 
-                else {
-                    return "Only accepts PUT requests";
-                }
-                break;
-            case "put":
-                if ($this->method == 'DELETE') {
-                    return array("status" => "success", "endpoint" => $this->endpoint, "verb" => $this->verb, "args" => $this->args, "request" => $this->request);
-                } 
-                else {
-                    return "Only accepts DELETE requests";
-                }
-                break;
-            default:
-                break;
-        }
-        
-     }
  }
 
 ?>
