@@ -120,3 +120,45 @@ section.content .container .box .row.box-content.round-bottom {
 .ql-toolbar.ql-snow {
     border-bottom: 1px solid rgba(84,121,128,.3);
 }
+
+.modal {
+    width: 600px;
+    background-color: #fff;
+    position: absolute;
+    z-index: 999;
+    display: none;
+    border: 1px solid #454d59;
+}
+
+.modal .box-title {
+    background-color: #547980;
+    padding: 10px;
+}
+
+.modal .box-title .box-title-text {
+    text-align: center;
+    display: inline-block;
+    float: left;
+}
+
+.modal .box-title .box-title-text h5 {
+    color: #fff;
+    margin-bottom: 0px;
+}
+
+.modal .box-title .box-title-button {
+    display: inline-block;
+    float: right;
+}
+
+.modal .box-content {
+    padding: 30px;
+}
+
+.modal .box-content h5 {
+    margin-bottom: 0px;
+}
+
+.modal .box-content > .row:last-child {
+    margin-top: 20px;
+}

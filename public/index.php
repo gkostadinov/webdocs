@@ -34,10 +34,10 @@
                  <section class="box">
                     <div class="row box-title">
                         <div class="box-title-text">
-                            <h4>Untitled</h4>
+                            <h4 id="title">Untitled</h4>
                         </div>
                         <div class="box-title-button">
-                            <a href="#" class="button" title="Share for viewing or editing">Share</a>
+                            <a href="javascript:void(0)"  class="button" id="share_btn" title="Share for viewing or editing" style="display: none">Share</a>
                         </div>
                     </div>
                     <div class="row box-content small-padding round-bottom">
@@ -48,11 +48,44 @@
             </div>
         </section>
 
-        <script src="js/vendor/quill.js"></script>
-        <script src="js/base.js?v=1"></script>
+        <div class="modal" id="modal" data-trigger="#share_btn" data-close="#close_btn">
+            <section class="box">
+                <div class="row box-title">
+                    <div class="box-title-text">
+                        <h5>Share the document</h5>
+                    </div>
+                    <div class="box-title-button">
+                        <a href="javascript:void(0)"  class="button" id="close_btn" title="Close the modal">Close</a>
+                    </div>
+                </div>
+                <div class="row box-content small-padding round-bottom">
+                    <div class="row">
+                        <div class="row">
+                            <h5>Link for edit:</h5>
+                        </div>
+                        <div class="row">
+                            <input id="edit_link" class="twelve columns" type="text" onClick="this.setSelectionRange(0, this.value.length)" value="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="row">
+                            <h5>Link for view:</h5>
+                        </div>
+                        <div class="row">
+                            <input id="view_link" class="twelve columns" type="text" onClick="this.setSelectionRange(0, this.value.length)" value="">
+                        </div>
+                    </div>
+                    </ul>
+                </div>
+            </section>
+        </div>
 
-        <script src="js/config.js?v=1"></script>
+        <script src="js/vendor/quill.js"></script>
+
+        <script src="js/base.js?v=2"></script>
+        <script src="js/config.js?v=2"></script>
         <script src="js/socket.js?v=1"></script>
-        <script src="js/app.js?v=1"></script>
+        <script src="js/modal.js?v=1"></script>
+        <script src="js/app.js?v=2"></script>
     </body>
 </html>

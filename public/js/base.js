@@ -41,6 +41,22 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function() {
     }
 }
 
+Node.prototype.data = function(dataAttr) {
+    return this.getAttribute('data-' + dataAttr);
+}
+
+Node.prototype.attr = function(attr) {
+    return this.getAttribute(attr);
+}
+
+Node.prototype.width = function() {
+    return this.getBoundingClientRect().width;
+}
+
+Node.prototype.height = function() {
+    return this.getBoundingClientRect().height;
+}
+
 function _(selector) {
     var el = document.querySelectorAll(selector || '_');
 

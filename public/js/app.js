@@ -1,10 +1,20 @@
-function App(docId='1') {
+function App(docId=null, editId=null, viewId=null,
+             readOnly=false, documentShared=false,
+             docTitle='Untitled', docContent='',
+             editorSelector='#editor', modalSelector='#modal') {
     this.docId = docId;
+    this.readOnly = readOnly;
+    this.docTitle = docTitle;
+    this.docContent = docContent;
     this.editorChanges = [];
 
-    this.editor = this.loadEditor({
+    this.documentShared = documentShared;
+    this.editId = editId;
+    this.viewId = viewId;
+
+    this.editor = this.initEditor(editorSelector, {
         modules: {
-            toolbar: [
+            toolbar: (!this.readOnly) ? [
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
 
@@ -22,26 +32,86 @@ function App(docId='1') {
                 [{ 'align': [] }],
 
                 ['clean']
-            ]
+            ] : null
         },
         placeholder: 'Start writing something...',
-        theme: 'snow'
+        theme: 'snow',
+        readOnly: this.readOnly
     })
+    this.modal = this.initModal(modalSelector);
 
-    this.ws = new Socket(docId, this.wsReceiveMessage.bind(this));
-    this.initEditorChangeObserver()
+    this.ws = null;
+    this.initSocket();
+    this.initEditorChangeObserver();
+    this.setTitle();
 }
 
-App.prototype.loadEditor = function(editorOptions) {
-    var quill = new Quill('#editor', editorOptions);
+App.prototype.initSocket = function() {
+    this.ws = (this.ws === null && this.docId !== null && !this.readOnly) ? new Socket(this.docId, this.wsReceiveMessage.bind(this)) : null;
+}
+
+App.prototype.initEditor = function(selector, editorOptions) {
+    var quill = new Quill(selector, editorOptions);
     quill.on('text-change', this.editorTextChanged.bind(this));
     quill.focus();
+    quill.setContents(this.docContent);
 
     return quill;
 }
 
+App.prototype.initModal = function(modalSelector) {
+    return new Modal(modalSelector, this.onModalOpen.bind(this));
+}
+
+App.prototype.onModalOpen = function() {
+    if (!this.documentShared) {
+        var that = this;
+        _.post(API_HOST + '/webdocs/api/document',
+            {
+                'title': this.docTitle,
+                'content': this.getEditorContents()
+            },
+            function(err, data) {
+                if (err)
+                    return;
+
+                that.docId = data.edit_id;
+                that.editId = data.edit_id;
+                that.viewId = data.view_id;
+                that.documentShared = true;
+                that.setLinks();
+                that.initSocket();
+            }
+        );
+    } else {
+        this.setLinks();
+    }
+}
+
+App.prototype.getEditorContents = function() {
+    return JSON.stringify(this.editor.getContents());
+}
+
+App.prototype.setLinks = function() {
+    if (this.editId === null || this.viewId === null) {
+        _('#edit_link').value = 'Loading...';
+        _('#view_link').value = 'Loading...';
+    } else {
+        var baseLink = 'http://' + window.location.host + '/';
+        _('#edit_link').value = baseLink + '#e/' + this.editId;
+        _('#view_link').value = baseLink + '#v/' + this.viewId;
+        window.location.href = _('#edit_link').value;
+    }
+}
+
+App.prototype.setTitle = function() {
+    _('#title').innerText = this.docTitle;
+}
+
 App.prototype.editorTextChanged = function(delta, oldDelta, source) {
     if (source == 'user') {
+        if (!this.readOnly)
+            _('#share_btn').style.display = 'block';
         this.editorChanges.push(delta.ops);
     }
 }
@@ -58,7 +128,9 @@ App.prototype.wsReceiveMessage = function(data){
 App.prototype.initEditorChangeObserver = function() {
     var func = function() {
         if (this.editorChanges.length > 0) {
-            this.ws.send({'delta': this.editorChanges, 'document_id': this.docId});
+            if (this.ws !== null) {
+                this.ws.send({'delta': this.editorChanges, 'document_id': this.docId, 'content': this.getEditorContents()});
+            }
             this.editorChanges = [];
         }
 
@@ -69,5 +141,61 @@ App.prototype.initEditorChangeObserver = function() {
 }
 
 window.on('load', function() {
-    _.app = new App();
+    var editIdentifier = '#e/';
+    var viewIdentifier = '#v/';
+    var urlHash = window.location.hash;
+
+    var pageId = null;
+    var docId = null;
+    var editId = null;
+    var viewId = null;
+    var readOnly = false;
+    var documentShared = false;
+    var title = 'Untitled';
+    var content = '';
+
+    var done = function() {
+        _.app = new App(docId, editId, viewId, readOnly, documentShared, title, content);
+    }
+
+    if (urlHash.startsWith(editIdentifier)) {
+        pageId = urlHash.replace(editIdentifier, '');
+        _.get(API_HOST + '/webdocs/api/document/e/' + pageId,
+            function(err, data) {
+                if (err) {
+                    done();
+                    return;
+                }
+
+                docId = pageId;
+                editId = pageId;
+                documentShared = true;
+                title = data.title;
+                content = JSON.parse(data.content);
+                viewId = data.view_id;
+                done();
+                _('#share_btn').style.display = 'block';
+            }
+        );
+    } else if (urlHash.startsWith(viewIdentifier)) {
+        pageId = urlHash.replace(viewIdentifier, '');
+        _.get(API_HOST + '/webdocs/api/document/v/' + pageId,
+            function(err, data) {
+                if (err) {
+                    done();
+                    return;
+                }
+
+                docId = pageId;
+                viewId = pageId;
+                readOnly = true;
+                documentShared = true;
+                title = data.title;
+                content = JSON.parse(data.content);
+                done();
+            }
+        );
+    } else {
+        done();
+    }
 });
