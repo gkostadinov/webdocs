@@ -98,6 +98,6 @@
         <script src="js/config.js?v=3"></script>
         <script src="js/socket.js?v=2"></script>
         <script src="js/modal.js?v=1"></script>
-        <script src="js/app.js?v=2"></script>
+        <script src="js/app.js?v=3"></script>
     </body>
 </html>

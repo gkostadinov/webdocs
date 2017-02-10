@@ -109,7 +109,7 @@ App.prototype.setLinks = function() {
         _('#edit_link').value = 'Loading...';
         _('#view_link').value = 'Loading...';
     } else {
-        var baseLink = 'http://' + window.location.host + '/';
+        var baseLink = 'http://' + window.location.host + window.location.pathname;
         _('#edit_link').value = baseLink + '#e/' + this.editId;
         _('#view_link').value = baseLink + '#v/' + this.viewId;
         window.location.href = _('#edit_link').value;
