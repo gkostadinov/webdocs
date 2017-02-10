@@ -16,6 +16,8 @@ abstract class API
         header("Pragma: no-cache");
         header("Access-Control-Allow-Orgin: *");
         header("Access-Control-Allow-Methods: *");
+        header("Access-Control-Allow-Credentials: true");
+        header("Access-Control-Allow-Headers: Content-Type, Content-Length, Accept-Encoding, Authorization");
         header("Content-Type: application/json");
 
         $this->args = explode('/', rtrim($request, '/'));
@@ -41,6 +43,7 @@ abstract class API
             case 'DELETE':
             case 'POST':
                 $this->request = $this->_cleanInputs($_POST);
+                $this->file = file_get_contents("php://input");
                 break;
             case 'GET':
                 $this->request = $this->_cleanInputs($_GET);
@@ -49,6 +52,8 @@ abstract class API
                 $this->request = $this->_cleanInputs($_GET);
                 $this->file = file_get_contents("php://input");
                 break;
+            case "OPTIONS":
+                return $this->_response("", 200);
             default:
                 return $this->_response('Invalid Method', 405);
                 break;
