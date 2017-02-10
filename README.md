@@ -1,2 +1,2 @@
-# webdocs
-Web docs using websockets
+# Webdocs
+Anonymous collaborative document editing
